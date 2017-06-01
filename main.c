@@ -10,6 +10,8 @@
 #include "util/Text.h"
 #include "util/Colors.h"
 #include "util/Collections.h"
+#include "res/Human.h"
+
 
 /* STRUCTURAL VARIABLES */
 int WIDTH = 700, HEIGHT = 600;
@@ -22,6 +24,7 @@ int PAUSE_TIMER = 0;
 
 /* PROJECT VARIABLES */
 Array *points;
+Human adam;
 
 /* EXPLICIT DECLARATIONS */
 Vector GetOGLPos(int x, int y);
@@ -34,61 +37,14 @@ void init(void){
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     array_new(&(points), sizeof(Vector*));
+    human_make(&adam, nullVector());
 }
 void draw(void){
     int i, j, s;
 
-    /* SPLINE */
-    glColor1ub(COLOR_WHITE()); //glColor3f(1.0, 1.0, 1.0);
-    glMap2f(GL_MAP2_VERTEX_3,
-            0.0, 1.0, 3, 4,
-            0.0, 1.0, 3, 4,
-            &surface[0][0][0]);
-    glEnable(GL_MAP2_VERTEX_3);
-    glBegin(GL_LINE_STRIP);
-    s = 70;
-    for (i = 0; i <= s; i++)
-        for(j = 0; j <= s; j++)
-            glEvalCoord2f(i/((float)s), j/((float)s));
-    glEnd();
-    glDisable(GL_MAP2_VERTEX_3);
-
-
-    glPushMatrix();
-    glColor4ub(255, 255, 0, 140);
-    glutSolidSphere(.125f, 15, 15);
-    glPopMatrix();
-
-
-    Vector buffer = nullVector();
-    /* CONTROL POINTS */
-    for (i=0; i<4; i++){
-        for(j=0; j<4; j++) {
-            if (i+j == 0){
-                buffer = *createVector(surface[i][j][0], surface[i][j][1], surface[i][j][2]);
-            }
-
-            glPushMatrix();
-            glColor4ub(255, 0, 0, 140);
-            glTranslatef(surface[i][j][0], surface[i][j][1], surface[i][j][2]);
-            glutSolidSphere(.1f, 15, 15);
-            glText(format("%d, %d", i, j), nullVector());
-            //glText(format("%.2f, %.2f, %.2f", surface[i][j][0], surface[i][j][1], surface[i][j][2]), nullVector());
-            glPopMatrix();
-
-            glPushMatrix();
-            if (i+j > 0){
-                glColor4ub(255, 0, 0, 140);
-                glBegin(GL_LINES);
-                glVertex3f(buffer.x, buffer.y, buffer.z);
-                glVertex3f(surface[i][j][0], surface[i][j][1], surface[i][j][2]);
-                glEnd();
-
-                buffer = *createVector(surface[i][j][0], surface[i][j][1], surface[i][j][2]);
-            }
-            glPopMatrix();
-        }
-    }
+    glColor4ub(255,0, 0, 130);
+    glutSolidSphere(0.1f, 25, 25);
+    human_draw(adam);
 
     /* CLICKED POINTS */
     for(i=0; i<points->size; i++){

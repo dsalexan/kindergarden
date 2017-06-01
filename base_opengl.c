@@ -21,6 +21,23 @@ int PAUSE_TIMER = 0;
 
 
 /* PROJECT VARIABLES */
+GLfloat ctrlpoints[5][3] = {{ -4.0, -4.0, 0.0}, { -2.0, 4.0, 0.0}, {2.0, -4.0, 0.0}, {4.0, 4.0, 0.0}, {6.0, -2.0, 0.0}};
+float surface[4][4][3] = {
+        {{-1.5, -1.5, 4.0},  {-0.5, -1.5, 2.0},  {0.5, -1.5, -1.0}, {1.5, -1.5, 2.0}},
+        {{-1.5, -0.5, 1.0},  {-0.5, -0.5, 3.0},  {0.5, -0.5, 0.0},  {1.5, -0.5, -1.0}},
+        {{-1.5, 0.5,  4.0},  {-0.5, 0.5,  0.0},  {0.5, 0.5,  3.0},  {1.5, 0.5,  4.0}},
+        {{-1.5, 1.5,  -2.0}, {-0.5, 1.5,  -2.0}, {0.5, 1.5,  0.0},  {1.5, 1.5,  -1.0}}
+};
+float curve[6][3] = {{ -2.0, -4.0, 0.0},
+                     { -2.0, 2.0, 0.0},
+                     { -2.0, 6.0, 0.0},
+                     {2.0, 6.0, 0.0},
+                     {2.0, 2.0, 0.0},
+                     {2.0, -4.0, 0.0}};
+
+float surface2[2][2][3] = {{{-2, -4, 0}, {2, -4, 0}},
+                          {{-2, -4, 1}, {2, -4, 1}}};
+
 Array *points;
 
 /* EXPLICIT DECLARATIONS */
@@ -35,6 +52,52 @@ void init(void){
 
     array_new(&(points), sizeof(Vector*));
 }
+
+void draw1d(void){
+    int i, j, s;
+
+    /* SPLINE */
+    glColor1ub(COLOR_WHITE()); //glColor3f(1.0, 1.0, 1.0);
+    glMap1f(GL_MAP1_VERTEX_3,
+            0.0, 1.0, 3, 6,
+            &curve[0][0]);
+    glEnable(GL_MAP1_VERTEX_3);
+    glBegin(GL_LINE_STRIP);
+    s = 70;
+    for (i = 0; i <= s; i++)
+        glEvalCoord1f(i/((float)s));
+    glEnd();
+    glDisable(GL_MAP1_VERTEX_3);
+
+
+    glPushMatrix();
+    glColor4ub(255, 255, 0, 140);
+    glutSolidSphere(.125f, 15, 15);
+    glPopMatrix();
+
+    /* CONTROL POINTS */
+    for(j=0; j<6; j++) {
+        glPushMatrix();
+        glColor4ub(255, 0, 0, 140);
+        glTranslatef(curve[j][0], curve[j][1], curve[j][2]);
+        glutSolidSphere(.1f, 15, 15);
+        glText(format("%.2f, %.2f, %.2f", curve[j][0], curve[j][1], curve[j][2]), nullVector());
+        glPopMatrix();
+    }
+
+    /* CLICKED POINTS */
+    for(i=0; i<points->size; i++){
+        Vector *p = (Vector*)points->buffer[i];
+
+        glPushMatrix();
+        glColor4ub(0, 0, 255, 140);
+        glTranslatef(p->x, p->y, p->z);
+        glutSolidSphere(.1f, 15, 15);
+        glText(format("%.2f, %.2f, %.2f",p->x, p->y, p->z), nullVector());
+        glPopMatrix();
+    }
+}
+
 void draw(void){
     int i, j, s;
 

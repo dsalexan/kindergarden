@@ -19,7 +19,9 @@ Vector *createVector(float, float, float);
 /* VECTOR */
 Vector nullVector();
 
+void vector_new(Vector *v);
 void vector_set(Vector*, float, float, float);
+void vector_copy(Vector*, Vector);
 
 Vector addVector(Vector, Vector);
 Vector subtractVector(Vector, Vector);

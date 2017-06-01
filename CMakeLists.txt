@@ -21,7 +21,7 @@ endif(NOT OPENGL_FOUND)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES base_opengl.c util/Vectors.c util/Vectors.h util/Text.h util/Text.c util/Colors.h util/Colors.c util/Collections.h util/Collections.c)
+set(SOURCE_FILES main.c util/Vectors.c util/Vectors.h util/Text.h util/Text.c util/Colors.h util/Colors.c util/Collections.h util/Collections.c res/Human.h res/Human.c)
 add_executable(kindergargen ${SOURCE_FILES})
 
 target_link_libraries(kindergargen ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})

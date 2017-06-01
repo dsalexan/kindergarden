@@ -18,10 +18,18 @@ Vector nullVector(){
     return *createVector(.0f, .0f, .0f);
 }
 
+void vector_new(Vector *v){
+    v = (Vector*)malloc(sizeof(Vector*));
+}
 void vector_set(Vector* v, float x, float y, float z){
     v->x = x;
     v->y = y;
     v->z = z;
+}
+void vector_copy(Vector* v, Vector u){
+    v->x = u.x;
+    v->y = u.y;
+    v->z = u.z;
 }
 
 Vector addVector(Vector v1, Vector v2){
